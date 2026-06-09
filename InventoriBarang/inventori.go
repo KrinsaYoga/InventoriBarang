@@ -27,7 +27,6 @@ var nBarang int = 0
 var dataTransaksi [NMAX]Transaksi
 var nTransaksi int = 0
 
-
 func main() {
 	isiDataDummy()
 	cetakData()
@@ -38,7 +37,7 @@ func main() {
 // SUBPROGRAM DATA DUMMY
 // ==========================================
 func isiDataDummy() {
-	// Spesifikasi: Mengisi data awal ke dalam array untuk mempermudah pengujian 
+	// Spesifikasi: Mengisi data awal ke dalam array untuk mempermudah pengujian
 	if nBarang < NMAX {
 		dataBarang[nBarang].ID = 105
 		dataBarang[nBarang].Nama = "Beras"
@@ -88,8 +87,8 @@ func cetakData() {
 	fmt.Println("---------------------------------------------------------")
 	i = 0
 	for i < nBarang {
-		fmt.Printf("%-5d %-15s %-15s %-8d %-10d\n", 
-			dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Kategori, 
+		fmt.Printf("%-5d %-15s %-15s %-8d %-10d\n",
+			dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Kategori,
 			dataBarang[i].Stok, dataBarang[i].Harga)
 		i = i + 1
 	}
@@ -114,6 +113,42 @@ func tambahBarang() {
 	} else {
 		fmt.Println("Gudang Penuh!")
 	}
+}
+
+func urutID_Asc() {
+	// spesifikasi: mengurutkan data berdasarkan ID secara Ascending menggunakan Insertion Sort (untuk mendukung Binary Search)
+	var i, j int
+	var key Barang
+	i = 1
+	for i < nBarang {
+		key = dataBarang[i]
+		j = i - 1
+		for j >= 0 && dataBarang[j].ID > key.ID {
+			dataBarang[j+1] = dataBarang[j]
+			j = j - 1
+		}
+		dataBarang[j+1] = key
+		i = i + 1
+	}
+}
+
+func cariID_Binary(id int) int {
+	var low, mid, high, foundIdx int
+	urutID_Asc() //binary search
+	low = 0
+	high = nBarang - 1
+	foundIdx = -1
+	for low <= high && foundIdx == -1 {
+		mid = (low + high) / 2
+		if dataBarang[mid].ID == id {
+			foundIdx = mid
+		} else if dataBarang[mid].ID < id {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	return foundIdx
 }
 
 func hapusBarang() {
