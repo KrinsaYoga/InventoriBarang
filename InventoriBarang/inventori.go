@@ -29,5 +29,5 @@ var nTransaksi int = 0
 
 
 func main() {
-	fmt.Println("Aplikasi Inventori Sembako")
+	fmt.Println("Aplikasi Inventori")
 }
