@@ -96,3 +96,22 @@ func cetakData() {
 	fmt.Println("---------------------------------------------------------")
 	fmt.Println("Total Stok (Rekursif):", hitungTotalStok(nBarang))
 }
+
+func tambahBarang() {
+	if nBarang < NMAX {
+		fmt.Print("ID Barang: ")
+		fmt.Scan(&dataBarang[nBarang].ID)
+		fmt.Print("Nama Barang: ")
+		fmt.Scan(&dataBarang[nBarang].Nama)
+		fmt.Print("Kategori: ")
+		fmt.Scan(&dataBarang[nBarang].Kategori)
+		fmt.Print("Stok: ")
+		fmt.Scan(&dataBarang[nBarang].Stok)
+		fmt.Print("Harga: ")
+		fmt.Scan(&dataBarang[nBarang].Harga)
+		nBarang = nBarang + 1
+		fmt.Println("Data berhasil ditambahkan.")
+	} else {
+		fmt.Println("Gudang Penuh!")
+	}
+}
