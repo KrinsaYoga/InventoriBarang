@@ -115,3 +115,21 @@ func tambahBarang() {
 		fmt.Println("Gudang Penuh!")
 	}
 }
+
+func hapusBarang() {
+	var id, idx, i int
+	fmt.Print("Masukkan ID Barang yang akan dihapus: ")
+	fmt.Scan(&id)
+	idx = cariID_Binary(id)
+	if idx != -1 {
+		i = idx
+		for i < nBarang-1 {
+			dataBarang[i] = dataBarang[i+1]
+			i = i + 1
+		}
+		nBarang = nBarang - 1
+		fmt.Println("Barang berhasil dihapus.")
+	} else {
+		fmt.Println("ID tidak ditemukan.")
+	}
+}
