@@ -30,6 +30,7 @@ var nTransaksi int = 0
 
 func main() {
 	isiDataDummy()
+	cetakData()
 	fmt.Println("Data dummy berhasil dimuat")
 }
 
@@ -70,4 +71,28 @@ func isiDataDummy() {
 		dataBarang[nBarang].Harga = 2000
 		nBarang = nBarang + 1
 	}
+}
+
+func hitungTotalStok(n int) int {
+	/* Spesifikasi: Menghitung total seluruh stok secara rekursif */
+	if n == 0 {
+		return 0
+	}
+	return dataBarang[n-1].Stok + hitungTotalStok(n-1)
+}
+
+func cetakData() {
+	var i int
+	fmt.Println("\n---------------------------------------------------------")
+	fmt.Printf("%-5s %-15s %-15s %-8s %-10s\n", "ID", "Nama", "Kategori", "Stok", "Harga")
+	fmt.Println("---------------------------------------------------------")
+	i = 0
+	for i < nBarang {
+		fmt.Printf("%-5d %-15s %-15s %-8d %-10d\n", 
+			dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Kategori, 
+			dataBarang[i].Stok, dataBarang[i].Harga)
+		i = i + 1
+	}
+	fmt.Println("---------------------------------------------------------")
+	fmt.Println("Total Stok (Rekursif):", hitungTotalStok(nBarang))
 }
