@@ -28,9 +28,69 @@ var dataTransaksi [NMAX]Transaksi
 var nTransaksi int = 0
 
 func main() {
+	var pilihan, urutPilihan int
+	var lanjut bool
+
 	isiDataDummy()
-	cetakData()
-	fmt.Println("Data dummy berhasil dimuat")
+	lanjut = true
+
+	for lanjut {
+		fmt.Println("\n=== APLIKASI INVENTORI BARANG ===")
+		fmt.Println("1. Tambah Barang")
+		fmt.Println("2. Hapus Barang")
+		fmt.Println("3. Cari Barang Berdasarkan ID")
+		fmt.Println("4. Tampilkan Barang Berdasarkan Urutan Nama")
+		fmt.Println("5. Cari Barang Berdasarkan Nama")
+		fmt.Println("0. Keluar")
+		fmt.Print("Pilih menu: ")
+		fmt.Scan(&pilihan)
+
+		if pilihan == 1 {
+			tambahBarang()
+		} else if pilihan == 2 {
+			hapusBarang()
+		} else if pilihan == 3 {
+			var searchID, idx int
+			fmt.Print("Masukkan ID: ")
+			fmt.Scan(&searchID)
+			idx = cariID_Binary(searchID)
+			if idx != -1 {
+				fmt.Println("Ditemukan! Nama:", dataBarang[idx].Nama)
+			} else {
+				fmt.Println("Tidak ditemukan.")
+			}
+		} else if pilihan == 4 {
+			fmt.Print("1. A ke Z (Asc)\n2. Z ke A (Desc)\nPilihan: ")
+			fmt.Scan(&urutPilihan)
+
+			if urutPilihan == 1 {
+				sortByNama_Insertion(true)
+				cetakData()
+			} else if urutPilihan == 2 {
+				sortByNama_Insertion(false)
+				cetakData()
+			} else {
+				fmt.Println("Pilihan tidak valid! Kembali ke menu utama.")
+			}
+		} else if pilihan == 5 {
+			var searchNm string
+			var idx int
+			fmt.Print("Masukkan Nama: ")
+			fmt.Scan(&searchNm)
+			idx = cariNama_Sequential(searchNm)
+			if idx != -1 {
+				fmt.Println("Ditemukan! Stok:", dataBarang[idx].Stok)
+			} else {
+				fmt.Println("Tidak ditemukan.")
+			}
+		} else if pilihan == 0 {
+			fmt.Println("Program Selesai")
+			lanjut = false
+		} else {
+			fmt.Println("Pilihan tidak valid.")
+		}
+	}
+
 }
 
 // ==========================================
@@ -182,14 +242,14 @@ func cariNama_Sequential(nama string) int {
 	return foundIdx
 }
 
- func ubahBarang() {
+func ubahBarang() {
 	var id, idx int
 	fmt.Print("Masukkan ID Barang yang akan diubah: ")
 	fmt.Scan(&id)
-	
+
 	// Menggunakan Binary Search sesuai permintaan poin (d)
 	idx = cariID_Binary(id)
-	
+
 	if idx != -1 {
 		fmt.Println("Data ditemukan. Masukkan data baru:")
 		fmt.Print("Nama Baru: ")
@@ -201,5 +261,29 @@ func cariNama_Sequential(nama string) int {
 		fmt.Println("Data berhasil diperbarui.")
 	} else {
 		fmt.Println("Barang dengan ID tersebut tidak ditemukan.")
+	}
+}
+
+func sortByNama_Insertion(ascending bool) {
+	// Spesifikasi: Mengurutkan data berdasarkan nama menggunakan Insertion Sort
+	var i, j int
+	var key Barang
+	i = 1
+	for i < nBarang {
+		key = dataBarang[i]
+		j = i - 1
+		if ascending {
+			for j >= 0 && dataBarang[j].Nama > key.Nama {
+				dataBarang[j+1] = dataBarang[j]
+				j = j - 1
+			}
+		} else {
+			for j >= 0 && dataBarang[j].Nama < key.Nama {
+				dataBarang[j+1] = dataBarang[j]
+				j = j - 1
+			}
+		}
+		dataBarang[j+1] = key
+		i = i + 1
 	}
 }
