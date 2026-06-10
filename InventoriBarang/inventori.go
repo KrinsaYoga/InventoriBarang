@@ -169,6 +169,19 @@ func hapusBarang() {
 	}
 }
 
+func cariNama_Sequential(nama string) int {
+	var i, foundIdx int
+	i = 0
+	foundIdx = -1
+	for i < nBarang && foundIdx == -1 {
+		if dataBarang[i].Nama == nama {
+			foundIdx = i
+		}
+		i = i + 1
+	}
+	return foundIdx
+}
+
  func ubahBarang() {
 	var id, idx int
 	fmt.Print("Masukkan ID Barang yang akan diubah: ")
