@@ -329,3 +329,21 @@ func sortByStok_Selection(ascending bool) {
 		i = i + 1
 	}
 }
+
+func cariKategori_Sequential(kat string) {
+	var i int
+	var ditemukan bool
+	i = 0
+	ditemukan = false
+	fmt.Printf("\n--- Hasil Pencarian Kategori: %s ---\n", kat)
+	for i < nBarang {
+		if dataBarang[i].Kategori == kat {
+			fmt.Printf("ID: %d | Nama: %s | Stok: %d\n", dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Stok)
+			ditemukan = true
+		}
+		i = i + 1
+	}
+	if !ditemukan {
+		fmt.Println("Tidak ada barang dalam kategori tersebut.")
+	}
+}
