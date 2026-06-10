@@ -38,9 +38,10 @@ func main() {
 		fmt.Println("\n=== APLIKASI INVENTORI BARANG ===")
 		fmt.Println("1. Tambah Barang")
 		fmt.Println("2. Hapus Barang")
-		fmt.Println("3. Cari Barang Berdasarkan ID")
+		fmt.Println("3. Tampilkan Barang Berdasarkan Stok")
 		fmt.Println("4. Tampilkan Barang Berdasarkan Urutan Nama")
 		fmt.Println("5. Cari Barang Berdasarkan Nama")
+		fmt.Println("6. Cari Barang Berdasarkan ID")
 		fmt.Println("0. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
@@ -50,19 +51,23 @@ func main() {
 		} else if pilihan == 2 {
 			hapusBarang()
 		} else if pilihan == 3 {
-			var searchID, idx int
-			fmt.Print("Masukkan ID: ")
-			fmt.Scan(&searchID)
-			idx = cariID_Binary(searchID)
-			if idx != -1 {
-				fmt.Println("Ditemukan! Nama:", dataBarang[idx].Nama)
+			fmt.Print("1. Sedikit ke Banyak (Asc)\n2. Banyak ke Sedikit (Desc)\nPilihan: ")
+			fmt.Scan(&urutPilihan)
+
+			// Perbaikan: Validasi input 1 atau 2
+			if urutPilihan == 1 {
+				sortByStok_Selection(true)
+				cetakData()
+			} else if urutPilihan == 2 {
+				sortByStok_Selection(false)
+				cetakData()
 			} else {
-				fmt.Println("Tidak ditemukan.")
+				fmt.Println("Pilihan tidak valid! Kembali ke menu utama.")
 			}
+
 		} else if pilihan == 4 {
 			fmt.Print("1. A ke Z (Asc)\n2. Z ke A (Desc)\nPilihan: ")
 			fmt.Scan(&urutPilihan)
-
 			if urutPilihan == 1 {
 				sortByNama_Insertion(true)
 				cetakData()
@@ -80,6 +85,16 @@ func main() {
 			idx = cariNama_Sequential(searchNm)
 			if idx != -1 {
 				fmt.Println("Ditemukan! Stok:", dataBarang[idx].Stok)
+			} else {
+				fmt.Println("Tidak ditemukan.")
+			}
+		} else if pilihan == 6 {
+			var searchID, idx int
+			fmt.Print("Masukkan ID: ")
+			fmt.Scan(&searchID)
+			idx = cariID_Binary(searchID)
+			if idx != -1 {
+				fmt.Println("Ditemukan! Nama:", dataBarang[idx].Nama)
 			} else {
 				fmt.Println("Tidak ditemukan.")
 			}
@@ -284,6 +299,33 @@ func sortByNama_Insertion(ascending bool) {
 			}
 		}
 		dataBarang[j+1] = key
+		i = i + 1
+	}
+}
+
+func sortByStok_Selection(ascending bool) {
+	// Spesifikasi: Mengurutkan data berdasarkan stok menggunakan Selection Sort
+	var i, j, idx_extreme int
+	var temp Barang
+	i = 0
+	for i < nBarang-1 {
+		idx_extreme = i
+		j = i + 1
+		for j < nBarang {
+			if ascending {
+				if dataBarang[j].Stok < dataBarang[idx_extreme].Stok {
+					idx_extreme = j
+				}
+			} else {
+				if dataBarang[j].Stok > dataBarang[idx_extreme].Stok {
+					idx_extreme = j
+				}
+			}
+			j = j + 1
+		}
+		temp = dataBarang[idx_extreme]
+		dataBarang[idx_extreme] = dataBarang[i]
+		dataBarang[i] = temp
 		i = i + 1
 	}
 }
