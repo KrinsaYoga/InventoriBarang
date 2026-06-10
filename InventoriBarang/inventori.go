@@ -168,3 +168,25 @@ func hapusBarang() {
 		fmt.Println("ID tidak ditemukan.")
 	}
 }
+
+ func ubahBarang() {
+	var id, idx int
+	fmt.Print("Masukkan ID Barang yang akan diubah: ")
+	fmt.Scan(&id)
+	
+	// Menggunakan Binary Search sesuai permintaan poin (d)
+	idx = cariID_Binary(id)
+	
+	if idx != -1 {
+		fmt.Println("Data ditemukan. Masukkan data baru:")
+		fmt.Print("Nama Baru: ")
+		fmt.Scan(&dataBarang[idx].Nama)
+		fmt.Print("Kategori Baru: ")
+		fmt.Scan(&dataBarang[idx].Kategori)
+		fmt.Print("Harga Baru: ")
+		fmt.Scan(&dataBarang[idx].Harga)
+		fmt.Println("Data berhasil diperbarui.")
+	} else {
+		fmt.Println("Barang dengan ID tersebut tidak ditemukan.")
+	}
+}
