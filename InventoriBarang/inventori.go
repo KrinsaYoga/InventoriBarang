@@ -257,28 +257,6 @@ func cariNama_Sequential(nama string) int {
 	return foundIdx
 }
 
-func ubahBarang() {
-	var id, idx int
-	fmt.Print("Masukkan ID Barang yang akan diubah: ")
-	fmt.Scan(&id)
-
-	// Menggunakan Binary Search sesuai permintaan poin (d)
-	idx = cariID_Binary(id)
-
-	if idx != -1 {
-		fmt.Println("Data ditemukan. Masukkan data baru:")
-		fmt.Print("Nama Baru: ")
-		fmt.Scan(&dataBarang[idx].Nama)
-		fmt.Print("Kategori Baru: ")
-		fmt.Scan(&dataBarang[idx].Kategori)
-		fmt.Print("Harga Baru: ")
-		fmt.Scan(&dataBarang[idx].Harga)
-		fmt.Println("Data berhasil diperbarui.")
-	} else {
-		fmt.Println("Barang dengan ID tersebut tidak ditemukan.")
-	}
-}
-
 func sortByNama_Insertion(ascending bool) {
 	// Spesifikasi: Mengurutkan data berdasarkan nama menggunakan Insertion Sort
 	var i, j int
@@ -345,5 +323,69 @@ func cariKategori_Sequential(kat string) {
 	}
 	if !ditemukan {
 		fmt.Println("Tidak ada barang dalam kategori tersebut.")
+	}
+}
+
+func ubahBarang() {
+	var id, idx int
+	fmt.Print("Masukkan ID Barang yang akan diubah: ")
+	fmt.Scan(&id)
+
+	// Menggunakan Binary Search sesuai permintaan poin (d)
+	idx = cariID_Binary(id)
+
+	if idx != -1 {
+		fmt.Println("Data ditemukan. Masukkan data baru:")
+		fmt.Print("Nama Baru: ")
+		fmt.Scan(&dataBarang[idx].Nama)
+		fmt.Print("Kategori Baru: ")
+		fmt.Scan(&dataBarang[idx].Kategori)
+		fmt.Print("Harga Baru: ")
+		fmt.Scan(&dataBarang[idx].Harga)
+		fmt.Println("Data berhasil diperbarui.")
+	} else {
+		fmt.Println("Barang dengan ID tersebut tidak ditemukan.")
+	}
+}
+
+func catatTransaksi() {
+	var id, idx, jml int
+	var tipe string
+	fmt.Print("Masukkan ID Barang: ")
+	fmt.Scan(&id)
+	idx = cariID_Binary(id)
+	if idx != -1 {
+		fmt.Print("Tipe Transaksi (Masuk/Keluar): ")
+		fmt.Scan(&tipe)
+		fmt.Print("Jumlah Barang: ")
+		fmt.Scan(&jml)
+		
+		if tipe == "Masuk" {
+			dataBarang[idx].Stok = dataBarang[idx].Stok + jml
+			// PERBAIKAN: Mengisi IDTransaksi agar tidak 0
+			dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+			dataTransaksi[nTransaksi].IDBarang = id
+			dataTransaksi[nTransaksi].Tipe = "Masuk"
+			dataTransaksi[nTransaksi].Jumlah = jml
+			nTransaksi = nTransaksi + 1
+			fmt.Println("Transaksi masuk berhasil dicatat.")
+		} else if tipe == "Keluar" {
+			if dataBarang[idx].Stok >= jml {
+				dataBarang[idx].Stok = dataBarang[idx].Stok - jml
+				// PERBAIKAN: Mengisi IDTransaksi agar tidak 0
+				dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+				dataTransaksi[nTransaksi].IDBarang = id
+				dataTransaksi[nTransaksi].Tipe = "Keluar"
+				dataTransaksi[nTransaksi].Jumlah = jml
+				nTransaksi = nTransaksi + 1
+				fmt.Println("Transaksi keluar berhasil dicatat.")
+			} else {
+				fmt.Println("Stok tidak mencukupi!")
+			}
+		} else {
+			fmt.Println("Tipe tidak valid.")
+		}
+	} else {
+		fmt.Println("Barang tidak ditemukan.")
 	}
 }
