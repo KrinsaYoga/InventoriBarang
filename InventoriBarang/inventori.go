@@ -28,8 +28,9 @@ var dataTransaksi [NMAX]Transaksi
 var nTransaksi int = 0
 
 func main() {
-	var pilihan, urutPilihan int
+	var pilihan, urutPilihan, subPilihan int
 	var lanjut bool
+	var katCari string
 
 	isiDataDummy()
 	lanjut = true
@@ -38,10 +39,14 @@ func main() {
 		fmt.Println("\n=== APLIKASI INVENTORI BARANG ===")
 		fmt.Println("1. Tambah Barang")
 		fmt.Println("2. Hapus Barang")
-		fmt.Println("3. Tampilkan Barang Berdasarkan Stok")
-		fmt.Println("4. Tampilkan Barang Berdasarkan Urutan Nama")
-		fmt.Println("5. Cari Barang Berdasarkan Nama")
-		fmt.Println("6. Cari Barang Berdasarkan ID")
+		fmt.Println("3. Ubah Data Barang (Edit)")
+		fmt.Println("4. Tampilkan Barang Berdasarkan Stok")
+		fmt.Println("5. Tampilkan Barang Berdasarkan Urutan Nama")
+		fmt.Println("6. Cari Barang Berdasarkan Nama")
+		fmt.Println("7. Cari Barang Berdasarkan ID")
+		fmt.Println("8. Cari Berdasarkan Kategori")
+		fmt.Println("9. Catat Transaksi (Masuk/Keluar)")
+		fmt.Println("10. Lihat History Transaksi")
 		fmt.Println("0. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
@@ -51,6 +56,8 @@ func main() {
 		} else if pilihan == 2 {
 			hapusBarang()
 		} else if pilihan == 3 {
+			ubahBarang()
+		} else if pilihan == 4 {
 			fmt.Print("1. Sedikit ke Banyak (Asc)\n2. Banyak ke Sedikit (Desc)\nPilihan: ")
 			fmt.Scan(&urutPilihan)
 
@@ -65,7 +72,7 @@ func main() {
 				fmt.Println("Pilihan tidak valid! Kembali ke menu utama.")
 			}
 
-		} else if pilihan == 4 {
+		} else if pilihan == 5 {
 			fmt.Print("1. A ke Z (Asc)\n2. Z ke A (Desc)\nPilihan: ")
 			fmt.Scan(&urutPilihan)
 			if urutPilihan == 1 {
@@ -77,7 +84,7 @@ func main() {
 			} else {
 				fmt.Println("Pilihan tidak valid! Kembali ke menu utama.")
 			}
-		} else if pilihan == 5 {
+		} else if pilihan == 6 {
 			var searchNm string
 			var idx int
 			fmt.Print("Masukkan Nama: ")
@@ -88,7 +95,7 @@ func main() {
 			} else {
 				fmt.Println("Tidak ditemukan.")
 			}
-		} else if pilihan == 6 {
+		} else if pilihan == 7 {
 			var searchID, idx int
 			fmt.Print("Masukkan ID: ")
 			fmt.Scan(&searchID)
@@ -98,6 +105,23 @@ func main() {
 			} else {
 				fmt.Println("Tidak ditemukan.")
 			}
+		} else if pilihan == 8 {
+			fmt.Print("Masukkan Nama Kategori: ")
+			fmt.Scan(&katCari)
+			cariKategori_Sequential(katCari)
+		} else if pilihan == 9 {
+			catatTransaksi()
+		} else if pilihan == 10 {
+			fmt.Print("Urutkan Berdasarkan Jumlah Transaksi?\n1. Terkecil (Asc)\n2. Terbesar (Desc)\n3. Tidak Urut\nPilih: ")
+			fmt.Scan(&subPilihan)
+
+			if subPilihan == 1 {
+				sortHistory(true)
+			} else if subPilihan == 2 {
+				sortHistory(false)
+			}
+
+			tampilkanHistory()
 		} else if pilihan == 0 {
 			fmt.Println("Program Selesai")
 			lanjut = false
@@ -359,7 +383,7 @@ func catatTransaksi() {
 		fmt.Scan(&tipe)
 		fmt.Print("Jumlah Barang: ")
 		fmt.Scan(&jml)
-		
+
 		if tipe == "Masuk" {
 			dataBarang[idx].Stok = dataBarang[idx].Stok + jml
 			// PERBAIKAN: Mengisi IDTransaksi agar tidak 0
@@ -387,5 +411,45 @@ func catatTransaksi() {
 		}
 	} else {
 		fmt.Println("Barang tidak ditemukan.")
+	}
+}
+
+func sortHistory(ascending bool) {
+	/* Spesifikasi: Mengurutkan riwayat transaksi berdasarkan JUMLAH
+	   menggunakan Insertion Sort */
+	var i, j int
+	var key Transaksi
+	i = 1
+	for i < nTransaksi {
+		key = dataTransaksi[i]
+		j = i - 1
+		if ascending {
+			for j >= 0 && dataTransaksi[j].Jumlah > key.Jumlah {
+				dataTransaksi[j+1] = dataTransaksi[j]
+				j = j - 1
+			}
+		} else {
+			for j >= 0 && dataTransaksi[j].Jumlah < key.Jumlah {
+				dataTransaksi[j+1] = dataTransaksi[j]
+				j = j - 1
+			}
+		}
+		dataTransaksi[j+1] = key
+		i = i + 1
+	}
+}
+
+func tampilkanHistory() {
+	var i int
+	fmt.Println("\n--- RIWAYAT TRANSAKSI (LOG) ---")
+	fmt.Printf("%-5s %-10s %-10s %-10s\n", "No", "ID Brg", "Tipe", "Jumlah")
+	i = 0
+	for i < nTransaksi {
+		fmt.Printf("%-5d %-10d %-10s %-10d\n",
+			dataTransaksi[i].IDTransaksi,
+			dataTransaksi[i].IDBarang,
+			dataTransaksi[i].Tipe,
+			dataTransaksi[i].Jumlah)
+		i = i + 1
 	}
 }
