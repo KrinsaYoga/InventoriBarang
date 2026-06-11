@@ -28,9 +28,10 @@ var dataTransaksi [NMAX]Transaksi
 var nTransaksi int = 0
 
 func main() {
-	var pilihan, urutPilihan, subPilihan int
+	var pilihan, urutPilihan, subPilihan, idx int
 	var lanjut bool
-	var katCari string
+	var katCari, searchNm string
+	var searchID int
 
 	isiDataDummy()
 	lanjut = true
@@ -40,13 +41,9 @@ func main() {
 		fmt.Println("1. Tambah Barang")
 		fmt.Println("2. Hapus Barang")
 		fmt.Println("3. Ubah Data Barang (Edit)")
-		fmt.Println("4. Tampilkan Barang Berdasarkan Stok")
-		fmt.Println("5. Tampilkan Barang Berdasarkan Urutan Nama")
-		fmt.Println("6. Cari Barang Berdasarkan Nama")
-		fmt.Println("7. Cari Barang Berdasarkan ID")
-		fmt.Println("8. Cari Berdasarkan Kategori")
-		fmt.Println("9. Catat Transaksi (Masuk/Keluar)")
-		fmt.Println("10. Lihat History Transaksi")
+		fmt.Println("4. Menu Pencarian & Tampilan Barang")
+		fmt.Println("5. Catat Transaksi (Masuk/Keluar)")
+		fmt.Println("6. Lihat History Transaksi")
 		fmt.Println("0. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
@@ -58,60 +55,71 @@ func main() {
 		} else if pilihan == 3 {
 			ubahBarang()
 		} else if pilihan == 4 {
-			fmt.Print("1. Sedikit ke Banyak (Asc)\n2. Banyak ke Sedikit (Desc)\nPilihan: ")
-			fmt.Scan(&urutPilihan)
+			// SUB-MENU DI DALAM IF-ELSE
+			fmt.Println("\n--- MENU PENCARIAN & TAMPILAN ---")
+			fmt.Println("1. Cari Berdasarkan Nama (Sequential)")
+			fmt.Println("2. Cari Berdasarkan ID (Binary)")
+			fmt.Println("3. Cari Berdasarkan Kategori")
+			fmt.Println("4. Tampilkan Urut Stok (Selection Sort)")
+			fmt.Println("5. Tampilkan Urut Nama (Insertion Sort)")
+			fmt.Print("Pilih: ")
+			fmt.Scan(&subPilihan)
 
-			// Perbaikan: Validasi input 1 atau 2
-			if urutPilihan == 1 {
-				sortByStok_Selection(true)
+			if subPilihan == 1 {
+				fmt.Print("Nama: ")
+				fmt.Scan(&searchNm)
+				idx = cariNama_Sequential(searchNm)
+				if idx != -1 {
+					fmt.Println("Ketemu! Stok:", dataBarang[idx].Stok)
+				} else {
+					fmt.Println("Tidak ada.")
+				}
+			} else if subPilihan == 2 {
+				fmt.Print("ID: ")
+				fmt.Scan(&searchID)
+				idx = cariID_Binary(searchID)
+				if idx != -1 {
+					fmt.Println("Ketemu! Nama:", dataBarang[idx].Nama)
+				} else {
+					fmt.Println("Tidak ada.")
+				}
+			} else if subPilihan == 3 {
+				var i int
+				var ketemu bool
+				fmt.Print("Kategori: ")
+				fmt.Scan(&katCari)
+				ketemu = false
+				for i = 0; i < nBarang; i++ {
+					if dataBarang[i].Kategori == katCari {
+						fmt.Printf("ID: %d | Nama: %s | Stok: %d\n", dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Stok)
+						ketemu = true
+					}
+				}
+				if !ketemu {
+					fmt.Println("Kategori tidak ada.")
+				}
+			} else if subPilihan == 4 {
+				fmt.Print("1. Asc  2. Desc: ")
+				fmt.Scan(&urutPilihan)
+				if urutPilihan == 1 {
+					sortByStok_Selection(true)
+				} else {
+					sortByStok_Selection(false)
+				}
 				cetakData()
-			} else if urutPilihan == 2 {
-				sortByStok_Selection(false)
+			} else if subPilihan == 5 {
+				fmt.Print("1. Asc  2. Desc: ")
+				fmt.Scan(&urutPilihan)
+				if urutPilihan == 1 {
+					sortByNama_Insertion(true)
+				} else {
+					sortByNama_Insertion(false)
+				}
 				cetakData()
-			} else {
-				fmt.Println("Pilihan tidak valid! Kembali ke menu utama.")
 			}
-
 		} else if pilihan == 5 {
-			fmt.Print("1. A ke Z (Asc)\n2. Z ke A (Desc)\nPilihan: ")
-			fmt.Scan(&urutPilihan)
-			if urutPilihan == 1 {
-				sortByNama_Insertion(true)
-				cetakData()
-			} else if urutPilihan == 2 {
-				sortByNama_Insertion(false)
-				cetakData()
-			} else {
-				fmt.Println("Pilihan tidak valid! Kembali ke menu utama.")
-			}
-		} else if pilihan == 6 {
-			var searchNm string
-			var idx int
-			fmt.Print("Masukkan Nama: ")
-			fmt.Scan(&searchNm)
-			idx = cariNama_Sequential(searchNm)
-			if idx != -1 {
-				fmt.Println("Ditemukan! Stok:", dataBarang[idx].Stok)
-			} else {
-				fmt.Println("Tidak ditemukan.")
-			}
-		} else if pilihan == 7 {
-			var searchID, idx int
-			fmt.Print("Masukkan ID: ")
-			fmt.Scan(&searchID)
-			idx = cariID_Binary(searchID)
-			if idx != -1 {
-				fmt.Println("Ditemukan! Nama:", dataBarang[idx].Nama)
-			} else {
-				fmt.Println("Tidak ditemukan.")
-			}
-		} else if pilihan == 8 {
-			fmt.Print("Masukkan Nama Kategori: ")
-			fmt.Scan(&katCari)
-			cariKategori_Sequential(katCari)
-		} else if pilihan == 9 {
 			catatTransaksi()
-		} else if pilihan == 10 {
+		} else if pilihan == 6 {
 			fmt.Print("Urutkan Berdasarkan Jumlah Transaksi?\n1. Terkecil (Asc)\n2. Terbesar (Desc)\n3. Tidak Urut\nPilih: ")
 			fmt.Scan(&subPilihan)
 
