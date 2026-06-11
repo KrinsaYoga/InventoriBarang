@@ -48,47 +48,50 @@ func main() {
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
 
-		if pilihan == 1 {
+		switch pilihan {
+		case 1:
 			tambahBarang()
-		} else if pilihan == 2 {
+		case 2:
 			hapusBarang()
-		} else if pilihan == 3 {
+		case 3:
 			ubahBarang()
-		} else if pilihan == 4 {
-			// SUB-MENU DI DALAM IF-ELSE
+		case 4:
+			// SUB-MENU MENGGUNAKAN SWITCH
 			fmt.Println("\n--- MENU PENCARIAN & TAMPILAN ---")
-			fmt.Println("1. Cari Berdasarkan Nama (Sequential)")
-			fmt.Println("2. Cari Berdasarkan ID (Binary)")
-			fmt.Println("3. Cari Berdasarkan Kategori")
-			fmt.Println("4. Tampilkan Urut Stok (Selection Sort)")
-			fmt.Println("5. Tampilkan Urut Nama (Insertion Sort)")
+			fmt.Println("1. Cari Nama (Sequential)")
+			fmt.Println("2. Cari ID (Binary)")
+			fmt.Println("3. Cari Kategori (Sequential)")
+			fmt.Println("4. Urutkan Stok (Selection)")
+			fmt.Println("5. Urutkan Nama (Insertion)")
 			fmt.Print("Pilih: ")
 			fmt.Scan(&subPilihan)
 
-			if subPilihan == 1 {
-				fmt.Print("Nama: ")
+			switch subPilihan {
+			case 1:
+				fmt.Print("Nama Barang: ")
 				fmt.Scan(&searchNm)
 				idx = cariNama_Sequential(searchNm)
 				if idx != -1 {
-					fmt.Println("Ketemu! Stok:", dataBarang[idx].Stok)
+					fmt.Println("Ketemu! Nama:", dataBarang[idx].Nama, "| Stok:", dataBarang[idx].Stok)
 				} else {
-					fmt.Println("Tidak ada.")
+					fmt.Println("Tidak ditemukan.")
 				}
-			} else if subPilihan == 2 {
-				fmt.Print("ID: ")
+			case 2:
+				fmt.Print("ID Barang: ")
 				fmt.Scan(&searchID)
 				idx = cariID_Binary(searchID)
 				if idx != -1 {
-					fmt.Println("Ketemu! Nama:", dataBarang[idx].Nama)
+					fmt.Println("Ketemu! Nama:", dataBarang[idx].Nama, "| Stok:", dataBarang[idx].Stok)
 				} else {
-					fmt.Println("Tidak ada.")
+					fmt.Println("Tidak ditemukan.")
 				}
-			} else if subPilihan == 3 {
+			case 3:
 				var i int
 				var ketemu bool
 				fmt.Print("Kategori: ")
 				fmt.Scan(&katCari)
 				ketemu = false
+				fmt.Printf("\n--- Hasil Kategori: %s ---\n", katCari)
 				for i = 0; i < nBarang; i++ {
 					if dataBarang[i].Kategori == katCari {
 						fmt.Printf("ID: %d | Nama: %s | Stok: %d\n", dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Stok)
@@ -96,45 +99,54 @@ func main() {
 					}
 				}
 				if !ketemu {
-					fmt.Println("Kategori tidak ada.")
+					fmt.Println("Kategori tidak ditemukan.")
 				}
-			} else if subPilihan == 4 {
-				fmt.Print("1. Asc  2. Desc: ")
+			case 4:
+				fmt.Print("1. Asc (Sedikit-Banyak)  2. Desc (Banyak-Sedikit): ")
 				fmt.Scan(&urutPilihan)
-				if urutPilihan == 1 {
+				switch urutPilihan {
+				case 1:
 					sortByStok_Selection(true)
-				} else {
+					cetakData()
+				case 2:
 					sortByStok_Selection(false)
+					cetakData()
+				default:
+					fmt.Println("Pilihan tidak valid.")
 				}
-				cetakData()
-			} else if subPilihan == 5 {
-				fmt.Print("1. Asc  2. Desc: ")
+			case 5:
+				fmt.Print("1. Asc (A-Z)  2. Desc (Z-A): ")
 				fmt.Scan(&urutPilihan)
-				if urutPilihan == 1 {
+				switch urutPilihan {
+				case 1:
 					sortByNama_Insertion(true)
-				} else {
+					cetakData()
+				case 2:
 					sortByNama_Insertion(false)
+					cetakData()
+				default:
+					fmt.Println("Pilihan tidak valid.")
 				}
-				cetakData()
+			default:
+				fmt.Println("Pilihan sub-menu tidak valid.")
 			}
-		} else if pilihan == 5 {
+		case 5:
 			catatTransaksi()
-		} else if pilihan == 6 {
-			fmt.Print("Urutkan Berdasarkan Jumlah Transaksi?\n1. Terkecil (Asc)\n2. Terbesar (Desc)\n3. Tidak Urut\nPilih: ")
+		case 6:
+			fmt.Print("Urut Jml Transaksi? 1. Asc  2. Desc  3. Tidak: ")
 			fmt.Scan(&subPilihan)
-
-			if subPilihan == 1 {
+			switch subPilihan {
+			case 1:
 				sortHistory(true)
-			} else if subPilihan == 2 {
+			case 2:
 				sortHistory(false)
 			}
-
 			tampilkanHistory()
-		} else if pilihan == 0 {
-			fmt.Println("Program Selesai")
+		case 0:
+			fmt.Println("Terima kasih! Program selesai.")
 			lanjut = false
-		} else {
-			fmt.Println("Pilihan tidak valid.")
+		default:
+			fmt.Println("Menu tidak tersedia.")
 		}
 	}
 
@@ -204,19 +216,33 @@ func cetakData() {
 }
 
 func tambahBarang() {
+	var idBaru, idx int
+
 	if nBarang < NMAX {
-		fmt.Print("ID Barang: ")
-		fmt.Scan(&dataBarang[nBarang].ID)
-		fmt.Print("Nama Barang: ")
-		fmt.Scan(&dataBarang[nBarang].Nama)
-		fmt.Print("Kategori: ")
-		fmt.Scan(&dataBarang[nBarang].Kategori)
-		fmt.Print("Stok: ")
-		fmt.Scan(&dataBarang[nBarang].Stok)
-		fmt.Print("Harga: ")
-		fmt.Scan(&dataBarang[nBarang].Harga)
-		nBarang = nBarang + 1
-		fmt.Println("Data berhasil ditambahkan.")
+		fmt.Print("Masukkan ID Barang Baru: ")
+		fmt.Scan(&idBaru)
+
+		// Cek apakah ID sudah ada menggunakan fungsi yang sudah kita buat
+		idx = cariID_Binary(idBaru)
+
+		if idx != -1 {
+			// Jika idx bukan -1, berarti ID sudah ditemukan di sistem
+			fmt.Println("Error: ID sudah digunakan oleh barang:", dataBarang[idx].Nama)
+			fmt.Println("Gagal menambah data. Gunakan ID lain.")
+		} else {
+			fmt.Print("ID Barang: ")
+			fmt.Scan(&dataBarang[nBarang].ID)
+			fmt.Print("Nama Barang: ")
+			fmt.Scan(&dataBarang[nBarang].Nama)
+			fmt.Print("Kategori: ")
+			fmt.Scan(&dataBarang[nBarang].Kategori)
+			fmt.Print("Stok: ")
+			fmt.Scan(&dataBarang[nBarang].Stok)
+			fmt.Print("Harga: ")
+			fmt.Scan(&dataBarang[nBarang].Harga)
+			nBarang = nBarang + 1
+			fmt.Println("Data berhasil ditambahkan.")
+		}
 	} else {
 		fmt.Println("Gudang Penuh!")
 	}
@@ -363,7 +389,7 @@ func ubahBarang() {
 	fmt.Print("Masukkan ID Barang yang akan diubah: ")
 	fmt.Scan(&id)
 
-	// Menggunakan Binary Search sesuai permintaan poin (d)
+	// Menggunakan Binary Search
 	idx = cariID_Binary(id)
 
 	if idx != -1 {
