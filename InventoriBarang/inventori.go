@@ -27,6 +27,10 @@ var nBarang int = 0
 var dataTransaksi [NMAX]Transaksi
 var nTransaksi int = 0
 
+// ==========================================
+// MAIN PROGRAM
+// ==========================================
+
 func main() {
 	var pilihan, urutPilihan, subPilihan, idx int
 	var lanjut bool
@@ -157,6 +161,8 @@ func main() {
 // ==========================================
 func isiDataDummy() {
 	// Spesifikasi: Mengisi data awal ke dalam array untuk mempermudah pengujian
+
+	// Data Barang
 	if nBarang < NMAX {
 		dataBarang[nBarang].ID = 105
 		dataBarang[nBarang].Nama = "Beras"
@@ -189,81 +195,43 @@ func isiDataDummy() {
 		dataBarang[nBarang].Harga = 2000
 		nBarang = nBarang + 1
 	}
-}
 
-func hitungTotalStok(n int) int {
-	/* Spesifikasi: Menghitung total seluruh stok secara rekursif */
-	if n == 0 {
-		return 0
-	}
-	return dataBarang[n-1].Stok + hitungTotalStok(n-1)
-}
+	// Data History Transaksi
 
-func cetakData() {
-	var i int
-	fmt.Println("\n---------------------------------------------------------")
-	fmt.Printf("%-5s %-15s %-15s %-8s %-10s\n", "ID", "Nama", "Kategori", "Stok", "Harga")
-	fmt.Println("---------------------------------------------------------")
-	i = 0
-	for i < nBarang {
-		fmt.Printf("%-5d %-15s %-15s %-8d %-10d\n",
-			dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Kategori,
-			dataBarang[i].Stok, dataBarang[i].Harga)
-		i = i + 1
-	}
-	fmt.Println("---------------------------------------------------------")
-	fmt.Println("Total Stok (Rekursif):", hitungTotalStok(nBarang))
-}
+	if nTransaksi < NMAX {
+		// Transaksi 1
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 105 // Beras
+		dataTransaksi[nTransaksi].Tipe = "Masuk"
+		dataTransaksi[nTransaksi].Jumlah = 10
+		nTransaksi = nTransaksi + 1
 
-func tambahBarang() {
-	var idBaru, idx int
+		// Transaksi 2
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 101 // Minyak
+		dataTransaksi[nTransaksi].Tipe = "Keluar"
+		dataTransaksi[nTransaksi].Jumlah = 5
+		nTransaksi = nTransaksi + 1
 
-	if nBarang < NMAX {
-		fmt.Print("Masukkan ID Barang Baru: ")
-		fmt.Scan(&idBaru)
+		// Transaksi 3
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 103 // Gula
+		dataTransaksi[nTransaksi].Tipe = "Masuk"
+		dataTransaksi[nTransaksi].Jumlah = 15
+		nTransaksi = nTransaksi + 1
 
-		// Cek apakah ID sudah ada menggunakan fungsi yang sudah kita buat
-		idx = cariID_Binary(idBaru)
-
-		if idx != -1 {
-			// Jika idx bukan -1, berarti ID sudah ditemukan di sistem
-			fmt.Println("Error: ID sudah digunakan oleh barang:", dataBarang[idx].Nama)
-			fmt.Println("Gagal menambah data. Gunakan ID lain.")
-		} else {
-			fmt.Print("ID Barang: ")
-			fmt.Scan(&dataBarang[nBarang].ID)
-			fmt.Print("Nama Barang: ")
-			fmt.Scan(&dataBarang[nBarang].Nama)
-			fmt.Print("Kategori: ")
-			fmt.Scan(&dataBarang[nBarang].Kategori)
-			fmt.Print("Stok: ")
-			fmt.Scan(&dataBarang[nBarang].Stok)
-			fmt.Print("Harga: ")
-			fmt.Scan(&dataBarang[nBarang].Harga)
-			nBarang = nBarang + 1
-			fmt.Println("Data berhasil ditambahkan.")
-		}
-	} else {
-		fmt.Println("Gudang Penuh!")
+		// Transaksi 4
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 102 // Garam
+		dataTransaksi[nTransaksi].Tipe = "Keluar"
+		dataTransaksi[nTransaksi].Jumlah = 20
+		nTransaksi = nTransaksi + 1
 	}
 }
 
-func urutID_Asc() {
-	// spesifikasi: mengurutkan data berdasarkan ID secara Ascending menggunakan Insertion Sort (untuk mendukung Binary Search)
-	var i, j int
-	var key Barang
-	i = 1
-	for i < nBarang {
-		key = dataBarang[i]
-		j = i - 1
-		for j >= 0 && dataBarang[j].ID > key.ID {
-			dataBarang[j+1] = dataBarang[j]
-			j = j - 1
-		}
-		dataBarang[j+1] = key
-		i = i + 1
-	}
-}
+// ==========================================
+// SUBPROGRAM PENCARIAN (SEARCHING)
+// ==========================================
 
 func cariID_Binary(id int) int {
 	var low, mid, high, foundIdx int
@@ -284,24 +252,6 @@ func cariID_Binary(id int) int {
 	return foundIdx
 }
 
-func hapusBarang() {
-	var id, idx, i int
-	fmt.Print("Masukkan ID Barang yang akan dihapus: ")
-	fmt.Scan(&id)
-	idx = cariID_Binary(id)
-	if idx != -1 {
-		i = idx
-		for i < nBarang-1 {
-			dataBarang[i] = dataBarang[i+1]
-			i = i + 1
-		}
-		nBarang = nBarang - 1
-		fmt.Println("Barang berhasil dihapus.")
-	} else {
-		fmt.Println("ID tidak ditemukan.")
-	}
-}
-
 func cariNama_Sequential(nama string) int {
 	var i, foundIdx int
 	i = 0
@@ -313,6 +263,45 @@ func cariNama_Sequential(nama string) int {
 		i = i + 1
 	}
 	return foundIdx
+}
+
+func cariKategori_Sequential(kat string) {
+	var i int
+	var ditemukan bool
+	i = 0
+	ditemukan = false
+	fmt.Printf("\n--- Hasil Pencarian Kategori: %s ---\n", kat)
+	for i < nBarang {
+		if dataBarang[i].Kategori == kat {
+			fmt.Printf("ID: %d | Nama: %s | Stok: %d\n", dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Stok)
+			ditemukan = true
+		}
+		i = i + 1
+	}
+	if !ditemukan {
+		fmt.Println("Tidak ada barang dalam kategori tersebut.")
+	}
+}
+
+// ==========================================
+// SUBPROGRAM PENGURUTAN (SORTING)
+// ==========================================
+
+func urutID_Asc() {
+	// spesifikasi: mengurutkan data berdasarkan ID secara Ascending menggunakan Insertion Sort (untuk mendukung Binary Search)
+	var i, j int
+	var key Barang
+	i = 1
+	for i < nBarang {
+		key = dataBarang[i]
+		j = i - 1
+		for j >= 0 && dataBarang[j].ID > key.ID {
+			dataBarang[j+1] = dataBarang[j]
+			j = j - 1
+		}
+		dataBarang[j+1] = key
+		i = i + 1
+	}
 }
 
 func sortByNama_Insertion(ascending bool) {
@@ -366,21 +355,40 @@ func sortByStok_Selection(ascending bool) {
 	}
 }
 
-func cariKategori_Sequential(kat string) {
-	var i int
-	var ditemukan bool
-	i = 0
-	ditemukan = false
-	fmt.Printf("\n--- Hasil Pencarian Kategori: %s ---\n", kat)
-	for i < nBarang {
-		if dataBarang[i].Kategori == kat {
-			fmt.Printf("ID: %d | Nama: %s | Stok: %d\n", dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Stok)
-			ditemukan = true
+// ==========================================
+// SUBPROGRAM MANAJEMEN DATA (CRUD)
+// ==========================================
+
+func tambahBarang() {
+	var idBaru, idx int
+
+	if nBarang < NMAX {
+		fmt.Print("Masukkan ID Barang Baru: ")
+		fmt.Scan(&idBaru)
+
+		// Cek apakah ID sudah ada menggunakan fungsi yang sudah kita buat
+		idx = cariID_Binary(idBaru)
+
+		if idx != -1 {
+			// Jika idx bukan -1, berarti ID sudah ditemukan di sistem
+			fmt.Println("Error: ID sudah digunakan oleh barang:", dataBarang[idx].Nama)
+			fmt.Println("Gagal menambah data. Gunakan ID lain.")
+		} else {
+			dataBarang[nBarang].ID = idBaru
+			fmt.Print("Nama Barang: ")
+			fmt.Scan(&dataBarang[nBarang].Nama)
+			fmt.Print("Kategori: ")
+			fmt.Scan(&dataBarang[nBarang].Kategori)
+			fmt.Print("Stok: ")
+			fmt.Scan(&dataBarang[nBarang].Stok)
+			fmt.Print("Harga: ")
+			fmt.Scan(&dataBarang[nBarang].Harga)
+
+			nBarang = nBarang + 1
+			fmt.Println("Data berhasil ditambahkan.")
 		}
-		i = i + 1
-	}
-	if !ditemukan {
-		fmt.Println("Tidak ada barang dalam kategori tersebut.")
+	} else {
+		fmt.Println("Gudang Penuh!")
 	}
 }
 
@@ -405,6 +413,28 @@ func ubahBarang() {
 		fmt.Println("Barang dengan ID tersebut tidak ditemukan.")
 	}
 }
+
+func hapusBarang() {
+	var id, idx, i int
+	fmt.Print("Masukkan ID Barang yang akan dihapus: ")
+	fmt.Scan(&id)
+	idx = cariID_Binary(id)
+	if idx != -1 {
+		i = idx
+		for i < nBarang-1 {
+			dataBarang[i] = dataBarang[i+1]
+			i = i + 1
+		}
+		nBarang = nBarang - 1
+		fmt.Println("Barang berhasil dihapus.")
+	} else {
+		fmt.Println("ID tidak ditemukan.")
+	}
+}
+
+// ==========================================
+// SUBPROGRAM TRANSAKSI
+// ==========================================
 
 func catatTransaksi() {
 	var id, idx, jml int
@@ -486,4 +516,32 @@ func tampilkanHistory() {
 			dataTransaksi[i].Jumlah)
 		i = i + 1
 	}
+}
+
+// ==========================================
+// SUBPROGRAM OUTPUT & REKURSIF
+// ==========================================
+
+func hitungTotalStok(n int) int {
+	/* Spesifikasi: Menghitung total seluruh stok secara rekursif */
+	if n == 0 {
+		return 0
+	}
+	return dataBarang[n-1].Stok + hitungTotalStok(n-1)
+}
+
+func cetakData() {
+	var i int
+	fmt.Println("\n---------------------------------------------------------")
+	fmt.Printf("%-5s %-15s %-15s %-8s %-10s\n", "ID", "Nama", "Kategori", "Stok", "Harga")
+	fmt.Println("---------------------------------------------------------")
+	i = 0
+	for i < nBarang {
+		fmt.Printf("%-5d %-15s %-15s %-8d %-10d\n",
+			dataBarang[i].ID, dataBarang[i].Nama, dataBarang[i].Kategori,
+			dataBarang[i].Stok, dataBarang[i].Harga)
+		i = i + 1
+	}
+	fmt.Println("---------------------------------------------------------")
+	fmt.Println("Total Stok (Rekursif):", hitungTotalStok(nBarang))
 }
