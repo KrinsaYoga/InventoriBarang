@@ -195,6 +195,30 @@ func isiDataDummy() {
 		dataBarang[nBarang].Harga = 2000
 		nBarang = nBarang + 1
 	}
+	if nBarang < NMAX {
+		dataBarang[nBarang].ID = 100
+		dataBarang[nBarang].Nama = "Cabe"
+		dataBarang[nBarang].Kategori = "Bumbu"
+		dataBarang[nBarang].Stok = 500
+		dataBarang[nBarang].Harga = 30000
+		nBarang = nBarang + 1
+	}
+	if nBarang < NMAX {
+		dataBarang[nBarang].ID = 104
+		dataBarang[nBarang].Nama = "Bawang"
+		dataBarang[nBarang].Kategori = "Bumbu"
+		dataBarang[nBarang].Stok = 75
+		dataBarang[nBarang].Harga = 18000
+		nBarang = nBarang + 1
+	}
+	if nBarang < NMAX {
+		dataBarang[nBarang].ID = 106
+		dataBarang[nBarang].Nama = "Sayur"
+		dataBarang[nBarang].Kategori = "Pokok"
+		dataBarang[nBarang].Stok = 8
+		dataBarang[nBarang].Harga = 2500
+		nBarang = nBarang + 1
+	}
 
 	// Data History Transaksi
 
@@ -225,6 +249,28 @@ func isiDataDummy() {
 		dataTransaksi[nTransaksi].IDBarang = 102 // Garam
 		dataTransaksi[nTransaksi].Tipe = "Keluar"
 		dataTransaksi[nTransaksi].Jumlah = 20
+		nTransaksi = nTransaksi + 1
+
+		// Transaksi 5
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 100 // Cabe
+		dataTransaksi[nTransaksi].Tipe = "Keluar"
+		dataTransaksi[nTransaksi].Jumlah = 	50
+		nTransaksi = nTransaksi + 1
+
+		// Transaksi 6
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 104 // Bawang
+		dataTransaksi[nTransaksi].Tipe = "Masuk"
+		dataTransaksi[nTransaksi].Jumlah = 35
+		nTransaksi = nTransaksi + 1
+
+		
+		// Transaksi 7
+		dataTransaksi[nTransaksi].IDTransaksi = nTransaksi + 1
+		dataTransaksi[nTransaksi].IDBarang = 106 // Sayur
+		dataTransaksi[nTransaksi].Tipe = "Masuk"
+		dataTransaksi[nTransaksi].Jumlah = 3
 		nTransaksi = nTransaksi + 1
 	}
 }
